@@ -1,0 +1,48 @@
+version: '3'
+services:
+  rproxy: 
+    image: nginx:latest
+    container_name: production_nginx
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+#    ports:
+#      - 5051:80 
+    links:
+      - node-red
+  ngrok:
+    image: wernight/ngrok
+    links:
+      - rproxy
+#    ports:
+#      - "4041:4040/tcp"
+    command:
+      - /bin/sh
+      - -c
+      - |
+        ngrok http rproxy:80 --authtoken $NGROK_AUTH
+  node-red:
+    build: ./node-red/
+    environment:
+      - TZ=America/Boise
+#    ports:
+#      - "1882:1880"
+    environment:
+      - WEBHOOK_SECRET=$WEBHOOK_SECRET
+    volumes:
+      - ./node-red/flows.json:/data/flows.json
+      - ./node-red/setting.js:/data/setting.js
+  receiver_configurator:
+    build:
+      context: ./mist_receiver_config/
+      dockerfile: dockerfile
+    environment:
+      - MIST_API=$MIST_API
+      - MIST_ORG=$MIST_ORG
+      - MIST_SITE=$MIST_SITE
+      - NOTIFY_TYPE=$NOTIFY_TYPE
+      - NOTIFY_URL=$NOTIFY_URL
+      - WEBHOOK_SECRET=$WEBHOOK_SECRET
+    depends_on:
+      - ngrok
+
+
