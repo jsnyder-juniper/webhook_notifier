@@ -11,7 +11,13 @@ Today we support 2 primary targets: Microsoft Teams and Slack.
 - Microsoft Teams or Slack incoming webhook URL
 
 
+To learn how to setup an incoming webhook in slack, please read https://api.slack.com/apps/A01F2AGU89Z/incoming-webhooks?success=1
 
+To learn how to setup a webhook connector in a teams channel, please read https://docs.microsoft.com/en-us/microsoftteams/platform/webhooks-and-connectors/how-to/add-incoming-webhook
+
+
+
+## Getting Started
 To start, you should clone this repo.
 ```
 git clone https://github.com/jsnyder-juniper/webhook_notifier.git
@@ -22,11 +28,23 @@ This dockerfile leverages environment variables to populate certain values.  You
 Intend to move this to an environment file in a later release.
 
 ```
+export MIST_API=<Mist API Token>
 export MIST_ORG=<mist_org_id>
 export NOTIFY_TYPE=<teams or slack>
 export NOTIFY_URL=<incoming webhook url>
 export NGROK_AUTH=<ngrok auth token>
 export WEBHOOK_SECRET=<secret phrase for simple filtering of requests>
+```
+
+### Example:
+
+```
+export MIST_API=DqZ5...grymT
+export MIST_ORG=exxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx6
+export NOTIFY_TYPE=teams
+export NOTIFY_URL=https://outlook.office.com/webhook/.../IncomingWebhook/.../...92
+export NGROK_AUTH=1c...mC
+export WEBHOOK_SECRET=abcdefghijklmnop
 ```
 
 ### Build Containers and run environment
